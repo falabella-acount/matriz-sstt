@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz ST Tienda — Guía de Ingreso</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-primary: #00765B;
+    --green-dark: #005C47;
+    --green-light: #639D68;
+    --lime: #C4D600;
+    --dark: #1A1A1A;
+    --gray-900: #333333;
+    --gray-700: #555555;
+    --gray-500: #888888;
+    --gray-400: #999999;
+    --gray-300: #CCCCCC;
+    --gray-200: #E5E5E5;
+    --gray-100: #F4F4F2;
+    --gray-50: #FAFAF9;
+    --white: #FFFFFF;
+    --red-soft: #D94040;
+    --red-bg: #FEF2F2;
+    --blue-info: #2563EB;
+    --blue-bg: #EFF6FF;
+    --orange: #E67E22;
+    --orange-bg: #FFF7ED;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--green-primary) 0%, var(--green-dark) 100%);
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,80,60,0.25);
+  }
+  .header-inner {
+    max-width: 720px; margin: 0 auto; padding: 18px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .header-logo {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    overflow: hidden; flex-shrink: 0;
+    background: #C4D600;
+  }
+  .header-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--white); }
+  .header p { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+  .progress-track { background: rgba(0,0,0,0.12); height: 3px; }
+  .progress-fill { height: 100%; background: var(--lime); border-radius: 0 3px 3px 0; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+
+  .main { max-width: 720px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  .tracker { display: flex; align-items: center; gap: 4px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+  .tracker-item { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--gray-400); white-space: nowrap; transition: color 0.3s; }
+  .tracker-item.active { color: var(--green-primary); }
+  .tracker-item.done { color: var(--green-light); }
+  .tracker-dot {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    border: 2px solid var(--gray-300); color: var(--gray-400);
+    background: var(--white); transition: all 0.3s; flex-shrink: 0;
+  }
+  .tracker-item.active .tracker-dot { border-color: var(--green-primary); background: var(--green-primary); color: var(--white); box-shadow: 0 0 0 3px rgba(0,118,91,0.12); }
+  .tracker-item.done .tracker-dot { border-color: var(--green-light); background: var(--green-light); color: var(--white); }
+  .tracker-sep { width: 14px; height: 2px; background: var(--gray-300); flex-shrink: 0; transition: background 0.3s; }
+  .tracker-sep.done { background: var(--green-light); }
+
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; animation: cardIn 0.4s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .card-head { padding: 24px 28px 18px; border-bottom: 1px solid var(--gray-200); }
+  .card-head .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--green-primary); margin-bottom: 6px; }
+  .card-head h2 { font-size: 21px; font-weight: 800; color: var(--dark); letter-spacing: -0.3px; }
+  .card-head .sub { font-size: 14px; color: var(--gray-700); margin-top: 4px; line-height: 1.5; }
+  .card-body { padding: 20px 28px 28px; }
+
+  .search-wrap { position: relative; margin-bottom: 18px; }
+  .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: var(--gray-400); pointer-events: none; }
+  .search-input {
+    width: 100%; padding: 14px 16px 14px 44px;
+    border: 2px solid var(--gray-200); border-radius: 10px;
+    font-family: inherit; font-size: 15px; color: var(--gray-900);
+    background: var(--gray-50); outline: none; transition: all 0.2s;
+  }
+  .search-input::placeholder { color: var(--gray-400); }
+  .search-input:focus { border-color: var(--green-primary); background: var(--white); box-shadow: 0 0 0 3px rgba(0,118,91,0.08); }
+  .search-count { font-size: 12px; color: var(--gray-500); margin-bottom: 14px; }
+
+  .scenarios { display: flex; flex-direction: column; gap: 8px; }
+  .scenario-btn {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 18px; border: 2px solid var(--gray-200); border-radius: 10px;
+    background: var(--white); cursor: pointer; transition: all 0.2s;
+    text-align: left; font-family: inherit; width: 100%;
+  }
+  .scenario-btn:hover { border-color: var(--green-primary); background: rgba(0,118,91,0.02); transform: translateX(3px); }
+  .scenario-btn .s-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: background 0.2s; margin-top: 2px; }
+  .scenario-btn:hover .s-icon { background: rgba(0,118,91,0.07); }
+  .scenario-btn .s-text { flex: 1; min-width: 0; }
+  .scenario-btn .s-title { font-size: 15px; font-weight: 600; color: var(--dark); display: block; }
+  .scenario-btn .s-desc { font-size: 13px; color: var(--gray-700); display: block; margin-top: 3px; line-height: 1.5; }
+  .scenario-btn .s-arrow { color: var(--gray-300); font-size: 18px; transition: all 0.2s; flex-shrink: 0; margin-top: 12px; }
+  .scenario-btn:hover .s-arrow { color: var(--green-primary); transform: translateX(3px); }
+  .no-results { text-align: center; padding: 32px 16px; color: var(--gray-500); font-size: 14px; }
+
+  /* RESPONSABLE SELECTOR */
+  .resp-options { display: flex; gap: 14px; flex-wrap: wrap; }
+  .resp-btn {
+    flex: 1; min-width: 220px;
+    padding: 28px 24px;
+    border: 2px solid var(--gray-200); border-radius: 12px;
+    background: var(--white); cursor: pointer; transition: all 0.25s;
+    text-align: center; font-family: inherit;
+  }
+  .resp-btn:hover { border-color: var(--green-primary); background: rgba(0,118,91,0.02); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .resp-btn .r-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+  .resp-btn .r-title { font-size: 17px; font-weight: 700; color: var(--dark); display: block; margin-bottom: 4px; }
+  .resp-btn .r-count { font-size: 13px; color: var(--gray-500); display: block; }
+
+  .reveal-block { animation: revealIn 0.4s cubic-bezier(0.4,0,0.2,1); margin-bottom: 14px; }
+  @keyframes revealIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .info-chip {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 16px 18px; background: var(--gray-50); border-radius: 10px;
+    border-left: 4px solid var(--green-light);
+  }
+  .info-chip.current { border-left-color: var(--green-primary); background: rgba(0,118,91,0.04); box-shadow: 0 0 0 1px rgba(0,118,91,0.08); }
+  .info-chip.n4-chip { border-left-color: var(--lime); }
+  .info-chip.resp-chip { border-left-color: var(--orange); }
+  .chip-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--green-primary); background: rgba(0,118,91,0.08);
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+  }
+  .chip-label.n4-label { background: rgba(196,214,0,0.2); color: #5A6600; }
+  .chip-label.resp-label { background: rgba(230,126,34,0.12); color: var(--orange); }
+  .chip-value { font-size: 15px; font-weight: 600; color: var(--dark); line-height: 1.4; }
+
+  .escenario-box { padding: 16px 18px; background: var(--blue-bg); border-radius: 10px; border-left: 4px solid var(--blue-info); margin-bottom: 14px; }
+  .escenario-box .esc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--blue-info); margin-bottom: 6px; }
+  .escenario-box .esc-text { font-size: 14px; line-height: 1.6; color: var(--gray-900); }
+
+  .datos-box { padding: 18px 20px; background: var(--red-bg); border-radius: 10px; border-left: 4px solid var(--red-soft); }
+  .datos-box .d-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--red-soft); margin-bottom: 8px; }
+  .datos-box .d-text { font-size: 14px; line-height: 1.7; color: var(--gray-900); }
+  .datos-box.sin-info { background: var(--orange-bg); border-left-color: var(--orange); }
+  .datos-box.sin-info .d-label { color: var(--orange); }
+
+  .actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--gray-200); flex-wrap: wrap; }
+  .btn { padding: 11px 22px; border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+  .btn-next { background: var(--green-primary); color: var(--white); }
+  .btn-next:hover { background: var(--green-dark); }
+  .btn-back { background: var(--gray-100); color: var(--gray-700); }
+  .btn-back:hover { background: var(--gray-200); }
+  .btn-reset { background: var(--gray-100); color: var(--gray-700); }
+  .btn-reset:hover { background: var(--gray-200); }
+  .btn-copy { background: var(--lime); color: var(--dark); margin-left: auto; }
+  .btn-copy:hover { filter: brightness(0.93); }
+  .btn-copy.copied { background: var(--green-light); color: var(--white); }
+
+  .welcome { text-align: center; padding: 44px 24px; }
+  .welcome-badge { width: 68px; height: 68px; margin: 0 auto 18px; background: linear-gradient(135deg, var(--green-primary), var(--green-light)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 28px rgba(0,118,91,0.22); }
+  .welcome-badge svg { width: 32px; height: 32px; fill: var(--white); }
+  .welcome h2 { font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+  .welcome p { font-size: 14px; color: var(--gray-700); max-width: 420px; margin: 0 auto 24px; line-height: 1.6; }
+  .btn-start { padding: 14px 40px; background: var(--green-primary); color: var(--white); border: none; border-radius: 10px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,118,91,0.28); transition: all 0.2s; }
+  .btn-start:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,118,91,0.32); }
+
+  .footer { text-align: center; margin-top: 28px; font-size: 11px; color: var(--gray-400); }
+
+  @media (max-width: 600px) {
+    .header-inner { padding: 14px 16px; }
+    .header h1 { font-size: 16px; }
+    .main { padding: 20px 14px 60px; }
+    .card-head, .card-body { padding-left: 20px; padding-right: 20px; }
+    .resp-options { flex-direction: column; }
+    .resp-btn { min-width: unset; padding: 22px 20px; }
+    .btn-copy { margin-left: 0; width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <img src="data:image/jpeg;base64,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" alt="Falabella">
+    </div>
+    <div>
+      <h1>Matriz Servicio Técnico — Tienda</h1>
+      <p>Guía interactiva para el correcto ingreso de casos</p>
+    </div>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</header>
+
+<main class="main" id="app"></main>
+
+<script>
+var DATA = [
+  { id:0, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Problemas con F11", icon:"\uD83D\uDD27",
+    escenario:"Problemas asociados a la creación del F11 en Sertec",
+    datos:"OST (número de OST) sin F11 asociado" },
+  { id:1, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Problemas con guía de despacho", icon:"\uD83D\uDCE6",
+    escenario:"No se genera la guía de despacho o se generó pero distinta a la del manifiesto",
+    datos:"OST (número de OST) sin guía de despacho asociada" },
+  { id:2, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Sin respuesta sucursal", icon:"\u23F3",
+    escenario:"1. Cuando la OST aún no tiene la resolución del SSTT de la marca y ya estamos fuera de plazo\n2. Cuando la OST no tiene cargado el informe técnico en SERTEC",
+    datos:"1. F11 (número del F11) + OST (número de la OST) sin gestión del producto\n2. Producto sin informe técnico en tienda ni en OST (número de la OST) + F11 (número del F11)" },
+  { id:3, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Producto sin retorno CCH", icon:"\uD83D\uDE9A",
+    escenario:"Existe respuesta del proveedor, pero el producto aún no ha regresado a la tienda > a 48 horas.",
+    datos:"F11 (número del F11) + OST (número de la OST) con gestión de producto pero aún no retorna a la tienda" },
+  { id:4, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Aviso siniestro transporte", icon:"\u26A0\uFE0F",
+    escenario:"Producto regresa a la tienda y éste presenta daño físico. < 24 horas",
+    datos:"F11 (número del F11) + OST (número de la OST) producto retorna a tienda con daños físicos (especificar el daño)\n\nObligatorio: adjuntar en el caso o en la OST imágenes del siniestro (foto del producto, de cómo iba embalado adentro de la caja y del embalaje por fuera)" },
+  { id:5, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Confirmación de proveedor a facturar", icon:"\uD83D\uDCCB",
+    escenario:"Aplica para proveedores que necesitan información extra en la RTV (Los Robles y JVC)",
+    datos:"1. F11 (número del F11) + OST (número de la OST) + confirmar a qué proveedor corresponde facturar\n2. F11 (número del F11) + OST (número de la OST) + confirmar los datos adicionales para facturar\n3. RTV internacional JVC + OST (número de la OST) + F11 (número del F11) + número de la RTV" },
+  { id:6, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Error creación OST", icon:"\uD83D\uDEAB",
+    escenario:"Problema en crear OST por algún motivo diferente a que la vigencia esté mal cargada.",
+    datos:"Se solicita inyección de OST ya que presento el error (especificar el error que no permite realizar el ingreso)\n\nNúmero de la boleta\nNúmero del SKU\nNúmero de serie\nFalla del producto\nRut del cliente\nNombre del cliente\nCorreo\nTeléfono" },
+  { id:7, resp:"SSTT miniticket", n1:"Interno", n3:"ST operación tienda", n4:"Ingreso DOA", icon:"\uD83D\uDCF1",
+    escenario:"Tienda recibe un producto que tiene DOA",
+    datos:"Se solicita ingreso DOA: Tienda (nombre de su tienda) + boleta (número de la boleta) + OST(número de la OST) + serie del producto, si ingresó con todos sus accesorios (si no indicar con cuáles) y caja original.\n\nObligatorio: Siempre debes adjuntar en el caso una imagen del producto. Para los Notebooks deben estar abiertos y encendidos en la imagen, idealmente que se visualice la falla" },
+  { id:8, resp:"SSTT miniticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Mini Ticket", icon:"\uD83C\uDFF7\uFE0F",
+    escenario:"Se necesita carga de vigencia o de modalidad (Modalidad: si producto es minitkt, bigticket o está en blanco)",
+    datos:"1. Se solicita carga de vigencia SKU (número de SKU) a (cantidad de meses de vigencia)\n2. Se solicita carga de modalidad SKU (número del SKU)" },
+  { id:9, resp:"SSTT miniticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Mini Ticket", icon:"\uD83D\uDCE2",
+    escenario:"1. Cliente inconforme con la gestión de su producto después de pasar por SSTT y es entregado en tienda.\n2. Cuando se necesita carga de sucursal",
+    datos:"Se solicita carga de sucursal SKU (número de SKU) y local (número del local de su tienda)" },
+  { id:10, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"La OST está con reemplazo autorizado pero el monto autorizado aparece en 0.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita corrección de datos a Sertec, vía FORM con casuistica \"GC - Saldo cero\"." },
+  { id:11, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"Al presionar el botón de GC en SERTEC no se envía y da error de emisión.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita corrección de datos a Sertec, vía FORM con casuistica \"GC - No se genera\"." },
+  { id:12, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"GC aparece enviada pero el correo está mal escrito o incompleto.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita corrección de datos a Sertec, vía FORM con casuistica \"Reenvío GC - Error correo\"." },
+  { id:13, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"Se necesita enviar la GC a un correo distinto al de la OST. Aparece la GC enviada (sin error), pero no llega al cliente y no tiene un correo alternativo.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita ok a jefatura para envío de GC a distinto correo. 2. Se solicita envío de GC al correo confirmado, vía FORM con casuistica \"Reenvio GC - Distinto correo\"." },
+  { id:14, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"La OST está con reemplazo autorizado pero no se envía la GC. Cliente quiere cambiar el correo donde recibir la GC.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita corrección de datos a Sertec, vía FORM con casuistica \"OST - Cambio correo\"." },
+  { id:15, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"Cliente tiene boletas separadas, una por el producto y otra por la garantía.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:16, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"Cuando el documento de venta es una guia de despacho.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:17, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"Gatex vencida pero el reclamo fue hecho en plazo.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:18, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"OST cancelada (luego de la validación, a petición de la aseguradora).\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora. 2. Con ok de aseguradora, se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:19, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Connect", icon:"\uD83D\uDCF1",
+    escenario:"Cuando el documento de venta es una guia de despacho.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:20, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Connect", icon:"\uD83D\uDCF1",
+    escenario:"Garantía Connect vencida pero el reclamo fue hecho en plazo.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Se solicita inyección de OST, vía FORM con casuistica \"Connect- Inyectar OST\"." },
+  { id:21, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Connect", icon:"\uD83D\uDCF1",
+    escenario:"OST cancelada (luego de la validación, a petición de la aseguradora).\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora. 2. Con ok de aseguradora, se solicita inyección de OST, vía FORM con casuistica \"Connect- Inyectar OST\"." },
+  { id:22, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"OST en estado cancelada.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora. 2. Con ok de aseguradora, se solicita inyección de OST, vía FORM con casuistica \"GATEX - Inyectar OST\"." },
+  { id:23, resp:"SSTT Bigticket", n1:"Reclamo", n3:"Reclamo Garantía", n4:"Garantía Extendida", icon:"\uD83D\uDEE1\uFE0F",
+    escenario:"OST Ingresada sin siniestro.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora para continuar gestión." },
+  { id:24, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Connect", icon:"\uD83D\uDCF1",
+    escenario:"OST Realmente cancelada.\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora. 2. Con ok de aseguradora, se solicita inyección de OST, vía FORM con casuistica \"Connect- Inyectar OST\"." },
+  { id:25, resp:"SSTT Bigticket", n1:"Pedido Solicitud", n3:"Solicitud de uso de Garantía", n4:"Garantía Connect", icon:"\uD83D\uDCF1",
+    escenario:"OST Robo que no se visualiza y tiene ok de Assurant (aseguradora).\nConsiderar que el RUT sea el del comprador.",
+    datos:"1. Validar datos del activo y OST con aseguradora. 2. Con ok de aseguradora, se solicita inyección de OST, vía FORM con casuistica \"Connect- Inyectar OST\"." }
+];
+
+var STEP_LABELS = ['Tipo','Escenario','N1','N3','N4','Datos'];
+var TOTAL = 6;
+var state = { step: 0, resp: null, selected: null };
+var app = document.getElementById('app');
+var progressFill = document.getElementById('progressFill');
+
+function render() {
+  progressFill.style.width = (state.step === 0 ? 0 : Math.round((state.step / TOTAL) * 100)) + '%';
+  if (state.step === 0) renderWelcome();
+  else if (state.step === 1) renderResp();
+  else if (state.step === 2) renderSearch();
+  else renderReveal();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderWelcome() {
+  app.innerHTML =
+    '<div class="card"><div class="welcome">' +
+    '<div class="welcome-badge"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>' +
+    '<h2>Guía de Ingreso de Casos ST</h2>' +
+    '<p>Selecciona el tipo de ticket, busca el escenario del reclamo y sigue los pasos para conocer la tipología correcta y los datos obligatorios para la descripción del caso.</p>' +
+    '<button class="btn-start" onclick="go(1)">Comenzar \u2192</button>' +
+    '</div></div>' +
+    '<p class="footer">Matriz ST Tienda \u00b7 SAC Falabella \u00b7 Eficiencia Operacional</p>';
+}
+
+function renderResp() {
+  var miniCount = DATA.filter(function(d){ return d.resp === "SSTT miniticket"; }).length;
+  var bigCount = DATA.filter(function(d){ return d.resp === "SSTT Bigticket"; }).length;
+  app.innerHTML =
+    tracker(1) +
+    '<div class="card">' +
+    '<div class="card-head">' +
+    '<div class="label">Paso 1 de 6</div>' +
+    '<h2>Tipo de ticket</h2>' +
+    '<div class="sub">Selecciona el tipo de servicio técnico que corresponde al caso.</div>' +
+    '</div>' +
+    '<div class="card-body">' +
+    '<div class="resp-options">' +
+    '<button class="resp-btn" onclick="pickResp(\'SSTT miniticket\')">' +
+    '<span class="r-icon">\uD83C\uDFF7\uFE0F</span>' +
+    '<span class="r-title">Postventa Tienda</span>' +
+    '<span class="r-count">SSTT Miniticket<br>' + miniCount + ' escenarios</span>' +
+    '</button>' +
+    '<button class="resp-btn" onclick="pickResp(\'SSTT Bigticket\')">' +
+    '<span class="r-icon">\uD83D\uDEE1\uFE0F</span>' +
+    '<span class="r-title">Postventa SAC</span>' +
+    '<span class="r-count">(Garantía Extendida - Garantía Connect)<br>' + bigCount + ' escenarios</span>' +
+    '</button>' +
+    '</div>' +
+    '</div></div>';
+}
+
+function pickResp(r) {
+  state.resp = r;
+  state.step = 2;
+  render();
+}
+
+function getFiltered() {
+  var items = DATA.filter(function(d){ return d.resp === state.resp; });
+  if (state.resp === "SSTT Bigticket") {
+    items.sort(function(a, b){ return a.escenario.localeCompare(b.escenario, 'es'); });
+  }
+  return items;
+}
+
+function renderSearch() {
+  var items = getFiltered();
+  app.innerHTML =
+    tracker(2) +
+    '<div class="card">' +
+    '<div class="card-head">' +
+    '<div class="label">Paso 2 de 6 \u2014 ' + (state.resp === "SSTT miniticket" ? "Postventa Tienda" : "Postventa SAC") + '</div>' +
+    '<h2>Selecciona el escenario</h2>' +
+    '<div class="sub">Busca o selecciona el escenario que se ajuste al caso que necesitas ingresar.</div>' +
+    '</div>' +
+    '<div class="card-body">' +
+    '<div class="search-wrap">' +
+    '<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/></svg>' +
+    '<input type="text" class="search-input" id="si" placeholder="Buscar escenario\u2026 ej: DOA, F11, GC, garantía" oninput="doFilter()" autofocus>' +
+    '</div>' +
+    '<div class="search-count" id="sc">' + items.length + ' escenarios disponibles</div>' +
+    '<div class="scenarios" id="sl">' + items.map(sCard).join('') + '</div>' +
+    '<div class="actions"><button class="btn btn-back" onclick="backToResp()">\u2190 Cambiar tipo</button></div>' +
+    '</div></div>';
+  document.getElementById('si').focus();
+}
+
+function sCard(d) {
+  return '<button class="scenario-btn" onclick="pick(' + d.id + ')">' +
+    '<span class="s-icon">' + d.icon + '</span>' +
+    '<span class="s-text">' +
+    '<span class="s-title">' + d.n4 + '</span>' +
+    '<span class="s-desc">' + d.escenario.replace(/\n/g, ' ') + '</span>' +
+    '</span>' +
+    '<span class="s-arrow">\u2192</span>' +
+    '</button>';
+}
+
+function doFilter() {
+  var q = document.getElementById('si').value.toLowerCase().trim();
+  var items = getFiltered();
+  var m = items.filter(function(d) {
+    return d.n4.toLowerCase().indexOf(q) > -1 ||
+      d.escenario.toLowerCase().indexOf(q) > -1 ||
+      d.n1.toLowerCase().indexOf(q) > -1 ||
+      d.n3.toLowerCase().indexOf(q) > -1 ||
+      d.datos.toLowerCase().indexOf(q) > -1;
+  });
+  var sl = document.getElementById('sl');
+  var sc = document.getElementById('sc');
+  if (m.length) {
+    sl.innerHTML = m.map(sCard).join('');
+  } else {
+    sl.innerHTML = '<div class="no-results">No se encontraron escenarios para "<strong>' + q + '</strong>"</div>';
+  }
+  sc.textContent = m.length + ' de ' + items.length + ' escenarios';
+}
+
+function pick(id) {
+  state.selected = DATA.filter(function(d){ return d.id === id; })[0];
+  state.step = 3;
+  render();
+}
+
+function backToResp() {
+  state.resp = null;
+  state.step = 1;
+  render();
+}
+
+function renderReveal() {
+  var d = state.selected, s = state.step;
+  app.innerHTML =
+    tracker(s) +
+    '<div class="card">' +
+    '<div class="card-head">' +
+    '<div class="label">Paso ' + s + ' de 6 \u2014 ' + d.icon + ' ' + d.n4 + '</div>' +
+    '<h2>' + getTitle(s) + '</h2>' +
+    '<div class="sub">' + getSub(s) + '</div>' +
+    '</div>' +
+    '<div class="card-body">' +
+    buildContent(s, d) +
+    '<div class="actions">' +
+    '<button class="btn btn-back" onclick="back()">\u2190 Volver</button>' +
+    (s < 6 ? '<button class="btn btn-next" onclick="next()">Siguiente \u2192</button>' : '') +
+    (s === 6 ? '<button class="btn btn-reset" onclick="resetAll()">\uD83D\uDD04 Nuevo caso</button><button class="btn btn-copy" id="cb" onclick="copyDatos()">\uD83D\uDCCB Copiar descripción</button>' : '') +
+    '</div>' +
+    '</div></div>' +
+    '<p class="footer">Matriz ST Tienda \u00b7 SAC Falabella \u00b7 Eficiencia Operacional</p>';
+}
+
+function getTitle(s) {
+  var t = { 3:'Nivel 1 \u2014 Tipo de caso', 4:'Nivel 3 \u2014 Subtipo', 5:'Nivel 4 \u2014 Detalle del escenario', 6:'Datos obligatorios en la descripción' };
+  return t[s] || '';
+}
+function getSub(s) {
+  var t = { 3:'Este es el primer nivel de clasificación del caso en Salesforce.', 4:'Subtipo que define la naturaleza operativa del caso.', 5:'Escenario específico del caso seleccionado.', 6:'Esta información es <strong>obligatoria</strong> y debe ir en el campo descripción del caso.' };
+  return t[s] || '';
+}
+
+function buildContent(s, d) {
+  var h = '';
+  // Responsable — always visible from step 3+
+  if (s >= 3) {
+    h += '<div class="reveal-block"><div class="info-chip resp-chip">' +
+      '<span class="chip-label resp-label">Responsable</span>' +
+      '<span class="chip-value">' + (d.resp === "SSTT miniticket" ? "Postventa Tienda" : "Postventa SAC (Garantía Extendida - Garantía Connect)") + '</span></div></div>';
+  }
+  // N1
+  if (s >= 3) h += makeChip('N1', d.n1, s === 3);
+  // N3
+  if (s >= 4) h += makeChip('N3', d.n3, s === 4);
+  // N4 + escenario
+  if (s >= 5) {
+    h += '<div class="reveal-block">' +
+      '<div class="info-chip n4-chip' + (s===5?' current':'') + '">' +
+      '<span class="chip-label n4-label">N4</span>' +
+      '<span class="chip-value">' + d.n4 + '</span>' +
+      '</div></div>' +
+      '<div class="reveal-block">' +
+      '<div class="escenario-box">' +
+      '<div class="esc-label">\uD83D\uDCCC Escenario de uso</div>' +
+      '<div class="esc-text">' + fmt(d.escenario) + '</div>' +
+      '</div></div>';
+  }
+  // Datos
+  if (s >= 6) {
+    var sinInfo = d.datos.trim().toLowerCase() === 'sin información';
+    h += '<div class="reveal-block">' +
+      '<div class="datos-box' + (sinInfo ? ' sin-info' : '') + '">' +
+      '<div class="d-label">\uD83D\uDCDD Datos obligatorios en la descripción</div>' +
+      '<div class="d-text">' + fmt(d.datos) + '</div>' +
+      '</div></div>';
+  }
+  return h;
+}
+
+function makeChip(label, value, isCurrent) {
+  return '<div class="reveal-block"><div class="info-chip' + (isCurrent ? ' current' : '') + '">' +
+    '<span class="chip-label">' + label + '</span>' +
+    '<span class="chip-value">' + value + '</span></div></div>';
+}
+
+function tracker(active) {
+  var html = '<div class="tracker">';
+  for (var i = 0; i < STEP_LABELS.length; i++) {
+    var n = i + 1, done = n < active, act = n === active;
+    html += '<div class="tracker-item' + (done ? ' done' : '') + (act ? ' active' : '') + '">' +
+      '<span class="tracker-dot">' + (done ? '\u2713' : n) + '</span>' +
+      '<span>' + STEP_LABELS[i] + '</span></div>';
+    if (i < STEP_LABELS.length - 1) html += '<span class="tracker-sep' + (done ? ' done' : '') + '"></span>';
+  }
+  return html + '</div>';
+}
+
+function go(s) { state.step = s; render(); }
+function next() { if (state.step < 6) { state.step++; render(); } }
+function back() {
+  if (state.step === 3) { state.step = 2; state.selected = null; }
+  else if (state.step > 3) { state.step--; }
+  render();
+}
+function resetAll() { state = { step: 0, resp: null, selected: null }; render(); }
+
+function copyDatos() {
+  if (!state.selected) return;
+  navigator.clipboard.writeText(state.selected.datos).then(function() {
+    var b = document.getElementById('cb');
+    b.classList.add('copied'); b.innerHTML = '\u2713 Copiado';
+    setTimeout(function() { b.classList.remove('copied'); b.innerHTML = '\uD83D\uDCCB Copiar descripción'; }, 2000);
+  });
+}
+
+function fmt(t) {
+  return t
+    .replace(/Obligatorio:/g, '<strong style="color:var(--red-soft)">\u26A0\uFE0F Obligatorio:</strong>')
+    .replace(/Considerar que el RUT sea el del comprador\./g, '<strong>Considerar que el RUT sea el del comprador.</strong>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n(\d+)\./g, '<br>$1.')
+    .replace(/\n/g, '<br>');
+}
+
+render();
+</script>
+</body>
+</html>
